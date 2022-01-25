@@ -39,7 +39,7 @@ JDKを切り替えることができる[jabba](https://github.com/shyiko/jabba)�
 - 幹事が、システム上に、開催した **飲み会** の **名前**, **開催日時** などを設定する
 - 幹事が、システム上の、開催した **飲み会** の **参加者** を追加/削除する
 - 幹事が、システム上の、開催した **飲み会** の **支払区分** (多め,普通,少なめ)ごとに **支払割合** を設定する
-- 幹事が、システム上の、開催した **飲み会** の **請求金額** を設定する  
+- 幹事が、システム上の、開催した **飲み会** の **請求金額** を設定する
 - 幹事が、システムを利用して **飲み会** の **参加者ごとの支払金額** を計算する
     - 割り勘の具体的な計算方法は決まっていません。チームで相談してください。ただし以下は考慮してください
         - 割り勘の方針には、 **支払金額** が多め・普通・少なめを考慮すること(上司は多め、遅く来た人は少なめに金額設定するため)
@@ -53,6 +53,24 @@ JDKを切り替えることができる[jabba](https://github.com/shyiko/jabba)�
 - 割り勘計算後の物理的なお金の移動に関することはスコープ外
 - HTTPやDB I/Oなどの入出力は一旦忘れましょう。考えるのはドメインモデルとその実装だけです。
 
+
+多め普通少なめ、支払いタイプは3種類
+支払い割合は何を100としたときに対する割合？
+    - 飲み代を人数で割ったときに対する多い少ない
+    - 重み案
+        少ないの重みを１にしたときに、普通の重みを２にしたときに、多いの重みを３にしたときに、
+        総量重み ： $X_1 + 2*X_2 ＋ 3*X_3$（ $X_1$：少ない人の人数、$X_2$：普通の人の人数、$X_3$：多いの人の人数）
+        少ない人の金額＝飲み代/総量重み
+
+普通の飲み会だと、偉い人がぽんとお金を払うけど、考慮外としてよい？
+    →よい
+支払割合は固定？
+    → 可変
+幹事が参加者とは限らない。
+幹事のみが割合等を設定できる権限を持つのでは？
+幹事は一人？
+支払実績を管理するのはシステム対象外
+
 ## ドメインモデルの洗い出し(達成=REQUIRED,時間=30分)
 
 - ドメインモデルを洗い出し共有する
@@ -64,9 +82,207 @@ JDKを切り替えることができる[jabba](https://github.com/shyiko/jabba)�
 
 |名前(日本語)|英語名(任意)|概要|
 |---|----|---|
-|飲み会|||
-|参加者|||
-|...|||
+|飲み会|party|割り勘する対象の飲み会|
+|飲み会の名前|partyName||
+|開催日時|holdAt||
+|参加者|member|飲み会に対する参加者(飲み会ごとに作られる)|
+|参加者の名前|memberName||
+|幹事|manager|システムを使用する人、差額を支払う人（仮）|
+|支払区分|paymentType|多い、普通、少ない|
+|支払割合|paymentRatio|支払区分に対応する重みの数値（飲み会ごとに違う）|
+|請求金額||飲み会で発生した料金|
+|支払金額|paymentTotal|参加者ごとの支払金額|
+|合計支払金額||支払金額の合計|
+|差額||請求金額 - 合計支払金額|
+||||
+||||
+||||
+||||
+
+請求金額 = 合計支払金額 + 差額
+合計支払金額 = sum(支払金額)
+
+```plantuml
+class 飲み会 {
+    string 飲み会の名前
+    string 開催日時
+}
+class 参加者 {
+    string 参加者の名前
+}
+class 支払区分 {
+    int 支払割合
+}
+class 合計支払金額
+class 幹事
+class 請求金額
+class 支払金額
+class 差額
+
+飲み会 -- 参加者
+参加者 -- 支払区分
+飲み会 -- 幹事
+飲み会 -- 支払区分
+飲み会 -- 請求金額
+請求金額 -- 合計支払金額
+合計支払金額 -- 支払金額
+参加者 -- 支払金額
+合計支払金額 -- 差額
+請求金額 -- 差額
+幹事 --差額
+
+```
+
+```plantuml
+title: あべ
+class 飲み会 {
+    string 飲み会の名前
+    string 開催日時
+}
+class 参加者 {
+    string 参加者の名前
+}
+class 支払区分 {
+    int 支払割合
+}
+class 合計支払金額
+class 幹事
+class 請求金額
+class 支払金額
+class 差額
+
+飲み会 -- 参加者
+参加者 -- 支払区分
+飲み会 -- 幹事
+飲み会 -- 支払区分
+飲み会 -- 請求金額
+参加者 -- 支払金額
+支払金額 -- 差額
+請求金額 -- 差額
+幹事 --差額
+
+```
+
+```plantuml
+title:小鳥
+class 飲み会 {
+    string 飲み会の名前
+    string 開催日時
+}
+class 参加者 {
+    string 参加者の名前
+}
+class 支払区分 {
+}
+class 合計支払金額
+class 幹事
+class 請求金額
+class 支払金額
+class 差額
+
+飲み会 -- 参加者
+参加者 -- 支払区分
+飲み会 -- 幹事
+飲み会 -- 支払割合設定
+飲み会 -- 請求金額
+請求金額 -- 合計支払金額
+合計支払金額 -- 支払金額
+参加者 -- 支払金額
+合計支払金額 -- 差額
+請求金額 -- 差額
+幹事 --差額
+
+```
+
+```plantuml
+title:motoyama
+class Party {
+  partyName: PartyName
+  partyDatetime: PartyDatetime
+  cashier: Cashier
+}
+class Member {
+  paymentType: PaymentType
+  secretaryType: SecretaryType
+}
+class PaymentType
+class PaymentRate
+class Payment {
+  member: Member
+  value: Money
+}
+class Cashier {
+  billingAmount: BillingAmount
+}
+class SecretaryType {
+
+}
+
+Party "1" -- "2..n" Member
+Cashier "1" -- "2..n" Payment
+Party "1" -- "1..n" PaymentType
+PaymentType "1" -- "1" PaymentRate
+
+```
+
+```plantuml
+title:池田
+class 飲み会 {
+    string 飲み会の名前
+    string 開催日時
+}
+class 参加者 {
+    string 参加者の名前
+}
+class 支払区分 {
+    int 支払割合
+}
+class 幹事
+class 請求金額
+class 支払金額
+
+飲み会 -- 参加者
+参加者 -- 支払区分
+飲み会 -- 幹事
+飲み会 -- 支払区分
+飲み会 -- 請求金額
+請求金額 -- 支払金額
+参加者 -- 支払金額
+幹事 --支払い金額
+
+```
+
+```plantuml
+title:トクヤマ
+class 飲み会 {
+    string 飲み会の名前
+    string 開催日時
+}
+class 参加者 {
+    string 参加者の名前
+}
+class 支払区分 {
+    int 支払割合
+}
+class 合計支払金額
+class 幹事
+class 請求金額
+class 支払金額
+class 差額
+
+飲み会 -- 参加者
+参加者 -- 支払区分
+飲み会 -- 幹事
+飲み会 -- 支払区分
+飲み会 -- 請求金額
+請求金額 -- 合計支払金額
+合計支払金額 -- 支払金額
+参加者 -- 支払金額
+合計支払金額 -- 差額
+請求金額 -- 差額
+幹事 --差額
+
+```
 
 英語名に悩むなら日本語クラス名にしてもよいです。
 
@@ -86,7 +302,7 @@ JDKを切り替えることができる[jabba](https://github.com/shyiko/jabba)�
         - 区分は列挙型で定義しましょう
     - 型の責務を考える
     - プロパティだけではなく、メソッドも仮で定義する
-    - プリミティブ型よりドメイン固有型を選択する    
+    - プリミティブ型よりドメイン固有型を選択する
     - 細かい実装は後回し
         - `TODO` or `FIXME` タグをつけて、`return null;` or `throw new NotImplementedException();`などを使うとよい
     - テストを書くか書かないかはチームごとに決めてください
@@ -125,30 +341,30 @@ JDKを切り替えることができる[jabba](https://github.com/shyiko/jabba)�
     - Tell Don't Ask(求めるな 命じよ)を厳守
         - ある処理をする際、その処理に必要な情報をオブジェクトから引き出さないで、情報を持ったオブジェクトに処理を命令すること
         - 内部データを計算しないでそのまま返すようなメソッド(Getter)は作らない
-        
+
             ```java
             // 好ましくない例) 相手のオブジェクトから内部データを求めている
             var secretaries = members.values().stream().filter(Member::isSecretary).collect(Collectors.toList());
             // 好ましい例) 相手のオブジェクトに命令してください。
             var secretaries = members.secretaries();
             ```
-            
+
             ```java
             // 好ましい例のMembersクラス
             public final Members {
                 private final List<Member> values;
-                
+
                 public Members(Member head, Member... tail) {
                     values = new ArrayList<>();
                     values.add(head);
                     values.addAll(Arrays.asList(tail));
                 }
-                
+
                 // 定義したとしてもドメインの計算文脈では利用しない(注意:I/O文脈では必要なることがある)
                 // public List<Member> values() {
                 //     return new ArrayList<>(values);
                 // }
-                
+
                 // Membersクラス内部で計算させる
                 public Optional<Members> secretaries() {
                 　　 var result = values.stream().filter(Member::isSecretary).collect(Collectors.toList())
@@ -162,14 +378,14 @@ JDKを切り替えることができる[jabba](https://github.com/shyiko/jabba)�
             ```
 
     - 誤りやすく安全ではない可変クラスではなく、不変(Immutable)クラスを採用する
-    
+
         ```java
         // 可変クラス
         public final Members {
             private List<Member> values;
-            
+
             // コンストラクタ省略
-            
+
             // 可変メソッド
             public Members add(Member other) {
                 // 可変リストなので相手に渡しても害がないように複製を作る
@@ -179,7 +395,7 @@ JDKを切り替えることができる[jabba](https://github.com/shyiko/jabba)�
             }
         }
         ```
-        
+
         - Javaのコレクションは可変コレクションしかないので、上記のような回りくどい実装になります。[vavr](https://github.com/vavr-io/vavr)の依存関係が入っているのでそちらの不変コレクションを利用してもよいです。
 
     - 依存関係はシンプルに
