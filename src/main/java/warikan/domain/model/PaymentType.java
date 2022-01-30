@@ -1,5 +1,11 @@
 package warikan.domain.model;
 
-public enum PaymentType {
-    
+public class PaymentType {
+    public PaymentTypeName paymentTypeName;
+    public PaymentWeight paymentWeight;
+
+    public PaymentType(PaymentTypeName paymentTypeName, PaymentWeight paymentWeight) {
+      this.paymentTypeName = paymentTypeName;
+      this.paymentWeight = paymentWeight;
+    }
 }

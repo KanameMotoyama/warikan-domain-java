@@ -5,36 +5,38 @@ import javax.annotation.Nonnull;
 
 /** 参加者。 */
 public final class Member {
-  private final MemberName name;
-  private final SecretaryType secretaryType;
+  public final MemberName name;
+  public final SecretaryType secretaryType;
+  public final PaymentType paymentType;
 
-  private Member(@Nonnull MemberName name, @Nonnull SecretaryType secretaryType) {
+  public Member(@Nonnull MemberName name, @Nonnull SecretaryType secretaryType, @Nonnull PaymentType paymentType) {
     this.name = name;
     this.secretaryType = secretaryType;
+    this.paymentType = paymentType;
   }
 
-  /**
-   * ファクトリメソッド。
-   *
-   * @param name {@link MemberName}
-   * @param secretaryType {@link SecretaryType}
-   * @return {@link Member}
-   */
-  @Nonnull
-  public static Member of(@Nonnull MemberName name, @Nonnull SecretaryType secretaryType) {
-    return new Member(name, secretaryType);
-  }
+  // /**
+  //  * ファクトリメソッド。
+  //  *
+  //  * @param name {@link MemberName}
+  //  * @param secretaryType {@link SecretaryType}
+  //  * @return {@link Member}
+  //  */
+  // @Nonnull
+  // public static Member of(@Nonnull MemberName name, @Nonnull SecretaryType secretaryType) {
+  //   return new Member(name, secretaryType);
+  // }
 
-  /**
-   * ファクトリメソッド。
-   *
-   * @param name {@link MemberName}
-   * @return {@link Member}
-   */
-  @Nonnull
-  public static Member of(@Nonnull MemberName name) {
-    return new Member(name, SecretaryType.NonSecretary);
-  }
+  // /**
+  //  * ファクトリメソッド。
+  //  *
+  //  * @param name {@link MemberName}
+  //  * @return {@link Member}
+  //  */
+  // @Nonnull
+  // public static Member of(@Nonnull MemberName name) {
+  //   return new Member(name, SecretaryType.NonSecretary);
+  // }
 
   @Override
   public boolean equals(Object o) {

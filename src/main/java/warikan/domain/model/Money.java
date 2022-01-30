@@ -20,10 +20,10 @@ public final class Money implements Comparable<Money> {
   public static final Currency JPY = Currency.getInstance("JPY");
   public static final Currency USD = Currency.getInstance("USD");
 
-  private final BigDecimal amount;
-  private final Currency currency;
+  public final BigDecimal amount;
+  public final Currency currency;
 
-  private Money(@Nonnull BigDecimal amount, @Nonnull Currency currency) {
+  public Money(@Nonnull BigDecimal amount, @Nonnull Currency currency) {
     Validate.isTrue(
         amount.scale() == currency.getDefaultFractionDigits(),
         "Scale of amount does not match currency");
@@ -32,29 +32,29 @@ public final class Money implements Comparable<Money> {
     this.currency = currency;
   }
 
-  /**
-   * ファクトリメソッド。
-   *
-   * @param rawAmount 通貨の量
-   * @param currency 通貨の単位
-   * @return {@link Money}
-   */
-  @Nonnull
-  public static Money of(@Nonnull BigDecimal rawAmount, @Nonnull Currency currency) {
-    return new Money(rawAmount, currency);
-  }
+  // /**
+  //  * ファクトリメソッド。
+  //  *
+  //  * @param rawAmount 通貨の量
+  //  * @param currency 通貨の単位
+  //  * @return {@link Money}
+  //  */
+  // @Nonnull
+  // public static Money of(@Nonnull BigDecimal rawAmount, @Nonnull Currency currency) {
+  //   return new Money(rawAmount, currency);
+  // }
 
-  /**
-   * ファクトリメソッド。
-   *
-   * @param rawAmount 通貨の量
-   * @param currency 通貨の単位
-   * @return {@link Money}
-   */
-  @Nonnull
-  public static Money of(long rawAmount, @Nonnull Currency currency) {
-    return new Money(BigDecimal.valueOf(rawAmount), currency);
-  }
+  // /**
+  //  * ファクトリメソッド。
+  //  *
+  //  * @param rawAmount 通貨の量
+  //  * @param currency 通貨の単位
+  //  * @return {@link Money}
+  //  */
+  // @Nonnull
+  // public static Money of(long rawAmount, @Nonnull Currency currency) {
+  //   return new Money(BigDecimal.valueOf(rawAmount), currency);
+  // }
 
   /**
    * 通貨量0を返すファクトリメソッド。
