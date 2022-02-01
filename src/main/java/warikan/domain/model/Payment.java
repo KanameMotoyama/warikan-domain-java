@@ -1,3 +1,7 @@
+package warikan.domain.model;
+
+import warikan.domain.model.members.Member;
+
 public class Payment {
   public Member member;
   public Money money;

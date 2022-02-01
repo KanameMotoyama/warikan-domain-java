@@ -1,13 +1,17 @@
 package warikan.domain.model;
 
-@Getter
+import java.time.LocalDateTime;
+import java.util.List;
+import warikan.domain.model.members.Member;
+
+
 public class Party {
   public String partyName;
-  public LocalDatetime partyDatetime;
+  public LocalDateTime partyDatetime;
   public List<Member> members;
   public List<PaymentType> paymentTypes;
 
-  public Party(String partyName, LocalDatetime partyDatetime, List<Member> members, List<PaymentType> paymentTypes) {
+  public Party(String partyName, LocalDateTime partyDatetime, List<Member> members, List<PaymentType> paymentTypes) {
     this.partyName = partyName;
     this.partyDatetime = partyDatetime;
     this.members = members;

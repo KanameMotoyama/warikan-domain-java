@@ -2,6 +2,7 @@ package warikan.domain.model.members;
 
 import java.util.Objects;
 import javax.annotation.Nonnull;
+import warikan.domain.model.PaymentType;
 
 /** 参加者。 */
 public final class Member {

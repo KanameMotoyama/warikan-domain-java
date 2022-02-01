@@ -32,29 +32,29 @@ public final class Money implements Comparable<Money> {
     this.currency = currency;
   }
 
-  // /**
-  //  * ファクトリメソッド。
-  //  *
-  //  * @param rawAmount 通貨の量
-  //  * @param currency 通貨の単位
-  //  * @return {@link Money}
-  //  */
-  // @Nonnull
-  // public static Money of(@Nonnull BigDecimal rawAmount, @Nonnull Currency currency) {
-  //   return new Money(rawAmount, currency);
-  // }
+  /**
+   * ファクトリメソッド。
+   *
+   * @param rawAmount 通貨の量
+   * @param currency 通貨の単位
+   * @return {@link Money}
+   */
+  @Nonnull
+  public static Money of(@Nonnull BigDecimal rawAmount, @Nonnull Currency currency) {
+    return new Money(rawAmount, currency);
+  }
 
-  // /**
-  //  * ファクトリメソッド。
-  //  *
-  //  * @param rawAmount 通貨の量
-  //  * @param currency 通貨の単位
-  //  * @return {@link Money}
-  //  */
-  // @Nonnull
-  // public static Money of(long rawAmount, @Nonnull Currency currency) {
-  //   return new Money(BigDecimal.valueOf(rawAmount), currency);
-  // }
+  /**
+   * ファクトリメソッド。
+   *
+   * @param rawAmount 通貨の量
+   * @param currency 通貨の単位
+   * @return {@link Money}
+   */
+  @Nonnull
+  public static Money of(long rawAmount, @Nonnull Currency currency) {
+    return new Money(BigDecimal.valueOf(rawAmount), currency);
+  }
 
   /**
    * 通貨量0を返すファクトリメソッド。
