@@ -1,3 +1,1 @@
-public class Party {
-  
-}
+public class Party {}

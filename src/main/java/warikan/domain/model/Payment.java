@@ -10,5 +10,4 @@ public class Payment {
     this.member = member;
     this.money = money;
   }
-  
 }

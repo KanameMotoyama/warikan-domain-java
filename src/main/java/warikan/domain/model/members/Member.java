@@ -10,7 +10,10 @@ public final class Member {
   public final SecretaryType secretaryType;
   public final PaymentType paymentType;
 
-  public Member(@Nonnull MemberName name, @Nonnull SecretaryType secretaryType, @Nonnull PaymentType paymentType) {
+  public Member(
+      @Nonnull MemberName name,
+      @Nonnull SecretaryType secretaryType,
+      @Nonnull PaymentType paymentType) {
     this.name = name;
     this.secretaryType = secretaryType;
     this.paymentType = paymentType;

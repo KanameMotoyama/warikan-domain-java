@@ -1,0 +1,24 @@
+@startuml
+title: あべ
+class 飲み会 {
+    string 飲み会の名前
+    string 開催日時
+}
+class メンバー {
+    string メンバーの名前
+    boolean 飲み会参加有無
+    boolean 幹事該当有無
+    int 支払金額
+}
+enum 支払区分 {
+    int 支払割合
+}
+class 請求金額
+class 支払金額
+
+メンバー -- 支払区分
+飲み会 "1" -- "0..n" メンバー
+飲み会 "1" -- "0..1" 請求金額
+メンバー "1" -- "0..1" 支払金額
+請求金額 "1" -- "0..n" 支払金額
+@enduml
