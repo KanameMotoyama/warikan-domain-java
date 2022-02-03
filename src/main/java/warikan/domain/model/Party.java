@@ -1,116 +1,47 @@
 package warikan.domain.model;
 
-import io.vavr.control.Option;
-import java.util.Currency;
-import java.util.Locale;
-import java.util.Objects;
-import javax.annotation.Nonnull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import warikan.domain.model.amount.BillingAmount;
-import warikan.domain.model.amount.MemberPaymentAmounts;
-import warikan.domain.model.amount.rate.MemberAmountRates;
-import warikan.domain.model.amount.rate.PaymentTypeAmountRates;
-import warikan.domain.model.amount.types.MemberPaymentTypes;
-import warikan.domain.model.members.Members;
+import java.math.RoundingMode;
+import java.time.OffsetDateTime;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
-/** 飲み会。 */
-public final class Party {
-  private static final Logger LOGGER = LoggerFactory.getLogger(Party.class);
-  private static final Currency DEFAULT_CURRENCY = Currency.getInstance(Locale.getDefault());
-  private final PartyName name;
-  private final Members members;
-  private final MemberPaymentTypes memberPaymentTypes;
-  private final Option<DifferenceAmountAdjustmentType> differenceAmountAdjustmentType;
+@RequiredArgsConstructor
+@Getter
+public class Party {
+  @NonNull private final String name;
+  @NonNull private final Member secretary;
+  @NonNull private final OffsetDateTime holdAt;
+  private Map<PaymentDuty, Double> rates;
+  private Set<Participation> participations = new HashSet<>();
 
-  private Party(
-      @Nonnull PartyName name,
-      @Nonnull Members members,
-      @Nonnull MemberPaymentTypes memberPaymentTypes,
-      @Nonnull Option<DifferenceAmountAdjustmentType> differenceAmountAdjustmentType) {
-    this.name = name;
-    this.members = members;
-    this.differenceAmountAdjustmentType = differenceAmountAdjustmentType;
-    this.memberPaymentTypes = memberPaymentTypes;
-  }
-
-  /**
-   * ファクトリメソッド。
-   *
-   * @param name {@link PartyName}
-   * @param members {@link Members}
-   * @param memberPaymentSetting {@link MemberPaymentTypes}
-   * @param differenceAmountAdjustmentType {@link DifferenceAmountAdjustmentType}
-   * @return {@link Party}
-   */
-  @Nonnull
-  public static Party of(
-      @Nonnull PartyName name,
-      @Nonnull Members members,
-      @Nonnull MemberPaymentTypes memberPaymentSetting,
-      @Nonnull Option<DifferenceAmountAdjustmentType> differenceAmountAdjustmentType) {
-    return new Party(name, members, memberPaymentSetting, differenceAmountAdjustmentType);
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    Party party = (Party) o;
-    return Objects.equals(name, party.name)
-        && Objects.equals(members, party.members)
-        && Objects.equals(memberPaymentTypes, party.memberPaymentTypes)
-        && Objects.equals(differenceAmountAdjustmentType, party.differenceAmountAdjustmentType);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(name, members, memberPaymentTypes, differenceAmountAdjustmentType);
-  }
-
-  @Override
-  public String toString() {
-    return "Party{"
-        + "name="
-        + name
-        + ", members="
-        + members
-        + ", memberPaymentTypes="
-        + memberPaymentTypes
-        + ", differenceAmountAdjustmentType="
-        + differenceAmountAdjustmentType
-        + '}';
-  }
-
-  /**
-   * 請求金額の割り勘を行う。
-   *
-   * @param billingAmount {@link BillingAmount}
-   * @param paymentTypeAmountRates {@link PaymentTypeAmountRates}
-   * @return {@link MemberPaymentAmounts}
-   */
-  @Nonnull
-  public MemberPaymentAmounts warikan(
-      @Nonnull BillingAmount billingAmount,
-      @Nonnull PaymentTypeAmountRates paymentTypeAmountRates) {
-    if (notEqualsPaymentTypes(paymentTypeAmountRates))
-      throw new IllegalArgumentException("Failure due to different paymentTypes");
-    MemberAmountRates memberAmountRates =
-        MemberAmountRates.of(memberPaymentTypes, paymentTypeAmountRates);
-    MemberPaymentAmounts unadjustedAmounts =
-        MemberPaymentAmounts.of(memberAmountRates, billingAmount);
-    BillingAmount differenceAmount =
-        billingAmount.subtract(unadjustedAmounts.totalPaymentAmount().toBillingAmount());
-    // 差額が生じた場合
-    if (differenceAmountAdjustmentType.isDefined() && differenceAmount.nonZero()) {
-      return DifferenceAmountAdjuster.of(
-              unadjustedAmounts, differenceAmount.value(), differenceAmountAdjustmentType.get())
-          .adjust();
+  public boolean participate(@NonNull Member member, @NonNull PaymentDuty duty) {
+    var p = new Participation(member, duty);
+    if (participations.contains(p)) {
+      participations.remove(p);
     }
-    return unadjustedAmounts;
+    return participations.add(p);
+  }
+  public void rates(double... values) {
+    this.rates = PaymentDuty.rates(values);
   }
 
-  private boolean notEqualsPaymentTypes(PaymentTypeAmountRates paymentTypeAmountRates) {
-    return !memberPaymentTypes.paymentTypes().equals(paymentTypeAmountRates.paymentTypes());
+  public Map<Member, Money> warikan(Money total) {
+    if (rates==null || rates.isEmpty()|| participations==null || participations.isEmpty()) {
+      throw new IllegalStateException("rates or participations is not set");
+    }
+    double totalWeight = this.participations.stream()
+        .map(m -> m.getDuty())
+        .mapToDouble(d -> rates.get(d))
+        .sum();
+    return this.participations.stream()
+        .collect(Collectors.toMap(
+          m -> m.getMember(),
+          m -> total.times(rates.get(m.getDuty())/ totalWeight, RoundingMode.CEILING)
+        ));
   }
 }
