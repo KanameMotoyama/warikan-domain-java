@@ -1,0 +1,40 @@
+<svg width="396px" height="160px"
+ viewBox="0.00 0.00 396.00 160.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g id="graph0" class="graph" transform=" rotate(0) translate(4 156)">
+<title>%3</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-156 392,-156 392,4 -4,4"/>
+<text text-anchor="middle" x="194" y="-7.8" font-family="Times,serif" font-size="14.00">PackageRelationDiagram [2019.12.1]</text>
+<g id="clust1" class="cluster">
+<title>cluster_warikan.domain.model</title>
+<polygon fill="lemonchiffon" stroke="#eedd82" stroke-width="2" points="201,-31 201,-106 380,-106 380,-31 201,-31"/>
+<text text-anchor="middle" x="290.5" y="-90.8" font-family="Times,serif" font-size="14.00">warikan.domain.model</text>
+</g>
+<!-- summary -->
+<g id="node1" class="node">
+<title>summary</title>
+<polygon fill="none" stroke="black" points="176,-152 0,-152 0,-114 182,-114 182,-146 176,-152"/>
+<polyline fill="none" stroke="black" points="176,-152 176,-146 "/>
+<polyline fill="none" stroke="black" points="182,-146 176,-146 "/>
+<text text-anchor="start" x="8" y="-136.8" font-family="Times,serif" font-size="14.00">Number of packages: 2</text>
+<text text-anchor="start" x="8" y="-121.8" font-family="Times,serif" font-size="14.00">Number of relations: 2</text>
+</g>
+<!-- warikan.domain.model -->
+<g id="node2" class="node">
+<title>warikan.domain.model</title>
+<polygon fill="#eedd82" stroke="black" points="379.5,-151 200.5,-151 200.5,-115 379.5,-115 379.5,-151"/>
+<text text-anchor="middle" x="290" y="-129.3" font-family="Times,serif" font-size="14.00">warikan.domain.model</text>
+</g>
+<!-- warikan.domain.model.members -->
+<g id="node3" class="node">
+<title>warikan.domain.model.members</title>
+<polygon fill="#eedd82" stroke="black" points="331.5,-75 248.5,-75 248.5,-39 331.5,-39 331.5,-75"/>
+<text text-anchor="middle" x="290" y="-53.3" font-family="Times,serif" font-size="14.00">members</text>
+</g>
+<!-- warikan.domain.model&#45;&gt;warikan.domain.model.members -->
+<g id="edge1" class="edge">
+<title>warikan.domain.model&#45;&gt;warikan.domain.model.members</title>
+<path fill="none" stroke="red" stroke-width="2" d="M290,-104.63C290,-98.28 290,-91.53 290,-85.2"/>
+<polygon fill="red" stroke="red" stroke-width="2" points="286.5,-104.84 290,-114.84 293.5,-104.84 286.5,-104.84"/>
+<polygon fill="red" stroke="red" stroke-width="2" points="293.5,-85.07 290,-75.07 286.5,-85.07 293.5,-85.07"/>
+</g>
+</g>
+</svg>
