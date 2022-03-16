@@ -18,21 +18,17 @@ class Main {
     paymentTypes.add(paymentTypeMidium);
     paymentTypes.add(paymentTypeSmall);
 
-    ArrayList<Member> members = new ArrayList<Member>();
-    members.add(new Member(MemberName.of("Komatsu"), SecretaryType.Secretary, paymentTypeLarge));
-    members.add(
-        new Member(MemberName.of("Yoshimura"), SecretaryType.NonSecretary, paymentTypeLarge));
-    members.add(
-        new Member(MemberName.of("Motoyama"), SecretaryType.NonSecretary, paymentTypeLarge));
-    members.add(
-        new Member(MemberName.of("Ishibashi"), SecretaryType.NonSecretary, paymentTypeLarge));
-    members.add(new Member(MemberName.of("Odori"), SecretaryType.NonSecretary, paymentTypeMidium));
-    members.add(
-        new Member(MemberName.of("Tokuyama"), SecretaryType.NonSecretary, paymentTypeSmall));
-    members.add(new Member(MemberName.of("Ikeda"), SecretaryType.NonSecretary, paymentTypeSmall));
-    members.add(new Member(MemberName.of("Abe"), SecretaryType.NonSecretary, paymentTypeSmall));
+    var members = Members.of(
+      new Member(MemberName.of("Komatsu"), SecretaryType.Secretary, paymentTypeLarge),
+      new Member(MemberName.of("Yoshimura"), SecretaryType.NonSecretary, paymentTypeLarge),
+      new Member(MemberName.of("Motoyama"), SecretaryType.NonSecretary, paymentTypeLarge),
+      new Member(MemberName.of("Ishibashi"), SecretaryType.NonSecretary, paymentTypeLarge),
+      new Member(MemberName.of("Odori"), SecretaryType.NonSecretary, paymentTypeMidium),
+      new Member(MemberName.of("Tokuyama"), SecretaryType.NonSecretary, paymentTypeSmall),
+      new Member(MemberName.of("Ikeda"), SecretaryType.NonSecretary, paymentTypeSmall),
+      new Member(MemberName.of("Abe"), SecretaryType.NonSecretary, paymentTypeSmall));
 
-    Party party = new Party("本山さん30歳おめでとうパーティー", LocalDateTime.now(), Members.of(members.get(0), members.subList(1, members.size())), paymentTypes);  // TODO members 変数は不要
+    Party party = new Party("本山さん30歳おめでとうパーティー", LocalDateTime.now(), members, paymentTypes);
     Cashier cashier = new Cashier(Money.of((long) 150000, Money.JPY));
     List<Payment> result = cashier.warikan(members);
     result
