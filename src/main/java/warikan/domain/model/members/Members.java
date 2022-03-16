@@ -136,7 +136,7 @@ public final class Members {
   
   public List<Payment> calcPaymentList(double paymentUnit){
     return values.stream()
-      .map(m -> new Payment(m, Money.of((long) (m.paymentType.paymentWeight.weight * paymentUnit), Money.JPY)))
+      .map(m -> m.calcPayment(paymentUnit))
       .collect(Collectors.toList());
   }
 }
