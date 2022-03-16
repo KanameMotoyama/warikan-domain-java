@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import warikan.domain.model.members.Member;
 import warikan.domain.model.members.MemberName;
+import warikan.domain.model.members.Members;
 import warikan.domain.model.members.SecretaryType;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -35,7 +36,7 @@ public class PartyTest {
         members.add(new Member(MemberName.of("Ikeda"), SecretaryType.NonSecretary, paymentTypeSmall));
         members.add(new Member(MemberName.of("Abe"), SecretaryType.NonSecretary, paymentTypeSmall));
 
-        Party party = new Party("本山さん30歳おめでとうパーティー", LocalDateTime.now(), members, paymentTypes);
+        Party party = new Party("本山さん30歳おめでとうパーティー", LocalDateTime.now(), Members.of(members.get(0), members.subList(1, members.size())), paymentTypes); // TODO members 変数は不要
         Cashier cashier = new Cashier(Money.of((long) 150000, Money.JPY));
         List<Payment> result = cashier.warikan(members);
         result.stream().forEach(r -> System.out.println(r.member.name + ":" + +r.money.amount.intValue()));
