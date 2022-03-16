@@ -77,4 +77,8 @@ public final class Member {
   public boolean nonSecretary() {
     return !isSecretary();
   }
+  
+  public int calcWeight() {
+	  return paymentType.paymentWeight.weight;
+  }
 }

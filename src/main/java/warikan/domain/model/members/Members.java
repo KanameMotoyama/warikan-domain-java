@@ -131,7 +131,7 @@ public final class Members {
   }
   
   public int calcTotalWeight() {
-    return values.stream().mapToInt(m -> m.paymentType.paymentWeight.weight).sum();
+    return values.stream().mapToInt(Member::calcWeight).sum();
   }
   
   public List<Payment> calcPaymentList(double paymentUnit){
