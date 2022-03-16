@@ -19,3 +19,9 @@ build/
 .idea/
 .gradle/
 spotlessJava
+
+# eclipse
+.classpath
+.project
+.settings
+bin

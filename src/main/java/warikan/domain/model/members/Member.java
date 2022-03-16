@@ -2,6 +2,9 @@ package warikan.domain.model.members;
 
 import java.util.Objects;
 import javax.annotation.Nonnull;
+
+import warikan.domain.model.Money;
+import warikan.domain.model.Payment;
 import warikan.domain.model.PaymentType;
 
 /** 参加者。 */
@@ -76,5 +79,13 @@ public final class Member {
 
   public boolean nonSecretary() {
     return !isSecretary();
+  }
+  
+  public int calcWeight() {
+	  return paymentType.paymentWeight.weight;
+  }
+  
+  public Payment calcPayment(double paymentUnit) {
+	  return new Payment(this, Money.of((long) (calcWeight() * paymentUnit), Money.JPY));
   }
 }

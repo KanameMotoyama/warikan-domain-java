@@ -1,7 +1,9 @@
 package warikan.domain.model;
 
+import lombok.EqualsAndHashCode;
 import warikan.domain.model.members.Member;
 
+@EqualsAndHashCode
 public class Payment {
   public Member member;
   public Money money;
@@ -11,3 +13,4 @@ public class Payment {
     this.money = money;
   }
 }
+

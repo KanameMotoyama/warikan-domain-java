@@ -8,6 +8,9 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import org.apache.commons.lang3.Validate;
 
+import warikan.domain.model.Money;
+import warikan.domain.model.Payment;
+
 /** メンバーグループ。 */
 public final class Members {
   private final List<Member> values;
@@ -125,5 +128,15 @@ public final class Members {
     List<Member> members =
         values.stream().filter(Member::nonSecretary).collect(Collectors.toList());
     return new Members(members);
+  }
+  
+  public int calcTotalWeight() {
+    return values.stream().mapToInt(Member::calcWeight).sum();
+  }
+  
+  public List<Payment> calcPaymentList(double paymentUnit){
+    return values.stream()
+      .map(m -> m.calcPayment(paymentUnit))
+      .collect(Collectors.toList());
   }
 }
